@@ -33,7 +33,10 @@
                             <td th:utext="${person.gender}">Otto</td>
                             <td th:utext="${person.age}">@mdo</td>
                             <td th:utext="${person.address}">@mdo</td>
-                            <td><a class="btn btn-primary" th:href="@{/edit-person/}+${person.id}">Sửa</a></td>
+                            <td>
+                              <a class="btn btn-primary" th:href="@{/edit-person/}+${person.id}">Sửa</a>
+                              <a class="btn btn-danger" th:href="@{/delete-person/}+${person.id}">Xóa</a>
+                            </td>
                           </tr>
                       </th:block>
                     </tbody>

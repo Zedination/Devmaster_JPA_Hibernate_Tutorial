@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.devmaster.entity.Person;
-import com.devmaster.entity.service.PersonService;
+import com.devmaster.model.PersonDTO;
+import com.devmaster.service.PersonService;
 
 @Controller
 public class BaseController {
@@ -20,11 +22,22 @@ public class BaseController {
 	private PersonService personService;
 	
 	@GetMapping("/")
-	public String index(Model model) {
+	public String index(Model model, @RequestParam(name = "id", required = false) Long id) {
 		model.addAttribute("title", "Demo JPA-Hibernate");
-		List<Person> persons = personService.getAllPerson();
+		List<Person> persons = personService.getAllPerson(id);
 		model.addAttribute("persons", persons);
 		return "person";
+	}
+	
+	@GetMapping("/test-api")
+	public String testApiPage() {
+		return "person-api";
+	}
+	
+	@ResponseBody
+	@GetMapping("/custom")
+	public List<PersonDTO> getPersonInfo() {
+		return personService.getCustomInfoPerson();
 	}
 	
 	@PostMapping("/create-person")
@@ -51,6 +64,12 @@ public class BaseController {
 			@RequestParam("age") Integer age, @RequestParam("address") String address) {
 		
 		this.personService.updatePerson(id, name, gender, age, address);
+		return "redirect:/";
+	}
+	
+	@GetMapping("/delete-person/{id}")
+	public String deletePerson(@PathVariable(name = "id") Long id) {
+		this.personService.deletePerson(id);
 		return "redirect:/";
 	}
 }
