@@ -1,6 +1,7 @@
 package com.devmaster.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +23,12 @@ public class BaseController {
 	private PersonService personService;
 	
 	@GetMapping("/")
-	public String index(Model model, @RequestParam(name = "id", required = false) Long id) {
+	public String index(Model model, @RequestParam(name = "id", required = false) Long id,
+						@RequestParam(name = "pageNumber", required = false) Optional<Integer> pageNumber,
+						@RequestParam(name = "pageSize", required = false) Optional<Integer> pageSize) {
+
 		model.addAttribute("title", "Demo JPA-Hibernate");
-		List<Person> persons = personService.getAllPerson(id);
+		List<Person> persons = this.personService.getPersonByPage(pageNumber.orElseGet(() -> 1) - 1, pageSize.orElse(5));
 		model.addAttribute("persons", persons);
 		return "person";
 	}

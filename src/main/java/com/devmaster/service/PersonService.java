@@ -35,6 +35,17 @@ public class PersonService {
 //		query.setParameter("id", id);
 		return query.getResultList();
 	}
+
+	public List<Person> getPersonByPage(Integer pageNumber, Integer pageSize) {
+		TypedQuery<Person> query = entityManager.createQuery("select p from Person p", Person.class);
+		TypedQuery<Long> countPersonQuery = entityManager.createQuery("select count(p.id) from Person p", Long.class);
+		Long countPerson = countPersonQuery.getSingleResult();
+//		int maxPageNumber = (int) Math.ceil(countPerson / pageSize);
+		int potision = pageNumber * pageSize;
+		query.setFirstResult(potision);
+		query.setMaxResults(pageSize);
+		return query.getResultList();
+	}
 	
 	public List<PersonDTO> getCustomInfoPerson() {
 		TypedQuery<PersonDTO> query = entityManager.createQuery("select new com.devmaster.model.PersonDTO(p.name, p.gender, p.address) from Person p", PersonDTO.class);
