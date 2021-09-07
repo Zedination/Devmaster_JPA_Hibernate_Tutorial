@@ -101,6 +101,7 @@
                             <td>${element.address}</td>
                             <td>
                                 <button onclick="bindingInfo(this)"  class="btn btn-primary btnEdit" person-id="${element.id}">Load</button>
+                                <button onclick="deletePerson(this)"  class="btn btn-danger btnEdit" person-id="${element.id}">Delete</button>
                             </td>
                           </tr>`;
                     html += template;
@@ -146,6 +147,21 @@
                     loadData();
                 }
             });
+        }
+
+        function deletePerson(element) {
+            let id = $(element).attr("person-id");
+            let confirmDelete = confirm("Bạn có muốn xóa hay không?");
+            if(confirmDelete) {
+                $.ajax({
+                    method: 'delete',
+                    url: `/api/delete-person/${id}`,
+                    success: () => {
+                        alert("Xóa thành công!");
+                        loadData();
+                    }
+                });
+            }
         }
 
         function bindingInfo(element){

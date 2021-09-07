@@ -41,7 +41,7 @@ public class BaseController {
 	}
 	
 	@PostMapping("/create-person")
-	public String createPerson(@RequestParam(name = "id") Long id,
+	public String createPerson(@RequestParam(name = "id", required = false) Long id,
 			@RequestParam("name") String name,
 			@RequestParam("gender") String gender,
 			@RequestParam("age") Integer age, @RequestParam("address") String address) {
