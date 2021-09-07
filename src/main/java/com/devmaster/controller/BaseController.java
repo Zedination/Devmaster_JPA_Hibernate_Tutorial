@@ -36,6 +36,7 @@ public class BaseController {
 		List<Integer> paginationList = IntStream.rangeClosed(1, numberOfPage).boxed().collect(Collectors.toList());
 		model.addAttribute("paginationList", paginationList);
 		model.addAttribute("activePage", pageNumber.orElseGet(() -> 1));
+		model.addAttribute("pageSize", pageSize.orElse(5));
 		return "person";
 	}
 	
