@@ -41,6 +41,23 @@
                       </th:block>
                     </tbody>
                   </table>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${activePage}!=1">
+                            <a class="page-link" th:href="@{/(pageNumber=${activePage - 1})}">Previous</a>
+                        </li>
+                        <li class="page-item" th:unless="${activePage}!=1">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        <li th:each="item : ${paginationList}" th:classappend="${item}==${activePage} ? 'active' : ''" class="page-item"><a class="page-link" th:href="@{/(pageNumber=${item})}" th:utext="${item}">1</a></li>
+                        <li class="page-item" th:if="${activePage}!=${paginationList.size()}">
+                            <a class="page-link" th:href="@{/(pageNumber=${activePage + 1})}">Next</a>
+                        </li>
+                        <li class="page-item" th:unless="${activePage}!=${paginationList.size()}">
+                            <span class="page-link">Next</span>
+                        </li>
+                    </ul>
+                </nav>
                   <br>
                   <h3 style="text-align: center;">Thêm mới</h3>
                   <br>

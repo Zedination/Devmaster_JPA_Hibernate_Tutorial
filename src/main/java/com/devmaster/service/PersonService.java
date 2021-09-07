@@ -38,13 +38,16 @@ public class PersonService {
 
 	public List<Person> getPersonByPage(Integer pageNumber, Integer pageSize) {
 		TypedQuery<Person> query = entityManager.createQuery("select p from Person p", Person.class);
-		TypedQuery<Long> countPersonQuery = entityManager.createQuery("select count(p.id) from Person p", Long.class);
-		Long countPerson = countPersonQuery.getSingleResult();
-//		int maxPageNumber = (int) Math.ceil(countPerson / pageSize);
-		int potision = pageNumber * pageSize;
-		query.setFirstResult(potision);
+		int position = pageNumber * pageSize;
+		query.setFirstResult(position);
 		query.setMaxResults(pageSize);
 		return query.getResultList();
+	}
+
+	public int getNumberOfPage(int pageSize) {
+		TypedQuery<Long> countPersonQuery = entityManager.createQuery("select count(p.id) from Person p", Long.class);
+		Long countPerson = countPersonQuery.getSingleResult();
+		return (int) Math.ceil(Double.valueOf(countPerson) / Double.valueOf(pageSize));
 	}
 	
 	public List<PersonDTO> getCustomInfoPerson() {

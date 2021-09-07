@@ -2,6 +2,8 @@ package com.devmaster.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,10 @@ public class BaseController {
 		model.addAttribute("title", "Demo JPA-Hibernate");
 		List<Person> persons = this.personService.getPersonByPage(pageNumber.orElseGet(() -> 1) - 1, pageSize.orElse(5));
 		model.addAttribute("persons", persons);
+		int numberOfPage = this.personService.getNumberOfPage(pageSize.orElse(5));
+		List<Integer> paginationList = IntStream.rangeClosed(1, numberOfPage).boxed().collect(Collectors.toList());
+		model.addAttribute("paginationList", paginationList);
+		model.addAttribute("activePage", pageNumber.orElseGet(() -> 1));
 		return "person";
 	}
 	
