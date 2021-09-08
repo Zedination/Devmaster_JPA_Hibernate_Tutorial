@@ -13,6 +13,13 @@
     <br>
     <div class="container">
         <div class="row">
+            <form class="form-inline" action="/">
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="inputPassword2" class="sr-only">Từ khóa</label>
+                    <input type="text" name="keyword" class="form-control" id="inputPassword2" placeholder="Từ khóa ...">
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Tìm kiếm</button>
+            </form>
             <div class="col-md-12">
                 <table class="table table-striped">
                     <thead>
@@ -47,14 +54,16 @@
                             <a class="page-link" th:href="@{/(pageNumber=${activePage - 1} ,pageSize=${pageSize})}">Previous</a>
                         </li>
                         <li class="page-item" th:unless="${activePage}!=1">
-                            <span class="page-link">Previous</span>
+                            <span class="page-link disable">Previous</span>
                         </li>
-                        <li th:each="item : ${paginationList}" th:classappend="${item}==${activePage} ? 'active' : ''" class="page-item"><a class="page-link" th:href="@{/(pageNumber=${item},pageSize=${pageSize})}" th:utext="${item}">1</a></li>
+                        <li th:each="item : ${paginationList}" th:classappend="${item}==${activePage} ? 'active' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/(pageNumber=${item},pageSize=${pageSize})}" th:utext="${item}">1</a>
+                        </li>
                         <li class="page-item" th:if="${activePage}!=${paginationList.size()}">
                             <a class="page-link" th:href="@{/(pageNumber=${activePage + 1},pageSize=${pageSize})}">Next</a>
                         </li>
                         <li class="page-item" th:unless="${activePage}!=${paginationList.size()}">
-                            <span class="page-link">Next</span>
+                            <span class="page-link disable">Next</span>
                         </li>
                     </ul>
                 </nav>

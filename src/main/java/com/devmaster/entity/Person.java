@@ -8,6 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -30,5 +34,16 @@ public class Person {
 	
 	@Column(name = "address")
 	private String address;
+
+	@Column(name = "name_removed_accent")
+	private String nameRemovedAccent;
+
+	@CreationTimestamp
+	@Column(name = "create_at")
+	private LocalDateTime createAt;
+
+	@UpdateTimestamp
+	@Column(name = "update_at")
+	private LocalDateTime updateAt;
 	
 }

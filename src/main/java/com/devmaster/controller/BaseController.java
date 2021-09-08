@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.devmaster.service.CommonService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,20 +21,25 @@ import com.devmaster.model.PersonDTO;
 import com.devmaster.service.PersonService;
 
 @Controller
+@RequiredArgsConstructor
 public class BaseController {
 
-	@Autowired
-	private PersonService personService;
+	private final PersonService personService;
+
+	private final CommonService commonService;
 	
 	@GetMapping("/")
 	public String index(Model model, @RequestParam(name = "id", required = false) Long id,
 						@RequestParam(name = "pageNumber", required = false) Optional<Integer> pageNumber,
-						@RequestParam(name = "pageSize", required = false) Optional<Integer> pageSize) {
+						@RequestParam(name = "pageSize", required = false) Optional<Integer> pageSize,
+						@RequestParam(name = "keyword", required = false) Optional<String> keyword) {
+
+		String keywordForSearch = this.commonService.removeAccent(keyword.orElse(""));
 
 		model.addAttribute("title", "Demo JPA-Hibernate");
-		List<Person> persons = this.personService.getPersonByPage(pageNumber.orElseGet(() -> 1) - 1, pageSize.orElse(5));
+		List<Person> persons = this.personService.getPersonByPage("%" + keywordForSearch + "%",pageNumber.orElseGet(() -> 1) - 1, pageSize.orElse(5));
 		model.addAttribute("persons", persons);
-		int numberOfPage = this.personService.getNumberOfPage(pageSize.orElse(5));
+		int numberOfPage = this.personService.getNumberOfPage(pageSize.orElse(5), "%" + keywordForSearch + "%");
 		List<Integer> paginationList = IntStream.rangeClosed(1, numberOfPage).boxed().collect(Collectors.toList());
 		model.addAttribute("paginationList", paginationList);
 		model.addAttribute("activePage", pageNumber.orElseGet(() -> 1));
