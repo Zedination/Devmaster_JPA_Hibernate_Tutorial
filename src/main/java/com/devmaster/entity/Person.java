@@ -1,17 +1,14 @@
 package com.devmaster.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 @Data
 @Entity
@@ -45,5 +42,23 @@ public class Person {
 	@UpdateTimestamp
 	@Column(name = "update_at")
 	private LocalDateTime updateAt;
+
+	@PrePersist
+	private void prePersist() {
+		this.setNameRemovedAccent(removeAccent(this.name));
+	}
 	
+	@PreUpdate
+	private void preUpdate() {
+		this.setNameRemovedAccent(removeAccent(this.name));
+	}
+
+
+	private String removeAccent(String s) {
+		s = s.toLowerCase();
+		String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
+		Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+		temp = pattern.matcher(temp).replaceAll("");
+		return temp.replaceAll("đ", "d");
+	}
 }

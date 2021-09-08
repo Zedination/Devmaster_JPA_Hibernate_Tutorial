@@ -3,11 +3,15 @@ package com.devmaster.service;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import com.devmaster.model.CreatePersonRequest;
+import com.devmaster.repository.PersonRepository;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +21,12 @@ import com.devmaster.entity.Person;
 import com.devmaster.model.PersonDTO;
 
 @Service
+@RequiredArgsConstructor
 public class PersonService {
 
-	@Autowired
-	private EntityManager entityManager;
+	private final EntityManager entityManager;
+
+	private final PersonRepository personRepository;
 	
 	public List<Person> getAllPerson(Long id) {
 		if(id == null) {
@@ -105,4 +111,28 @@ public class PersonService {
 
 	// ==== CRUD với Spring data JPA ====
 
+	public Iterable<Person> getAllPerson(){
+		return this.personRepository.findAll();
+	}
+
+	/**
+	 * Method này vừa là create person, vừa là update person
+	 * Nếu createPersonRequest.getId() == null thì là create person
+	 *
+	 * @param createPersonRequest
+	 */
+	public void modifyPerson(CreatePersonRequest createPersonRequest) {
+		Person person = createPersonRequest.getId() == null ? new Person() : personRepository.findById(createPersonRequest.getId()).get();
+//		Person person = personRepository.findById(createPersonRequest.getId()).orElseGet(Person::new);
+		person.setName(createPersonRequest.getName());
+		person.setAge(createPersonRequest.getAge());
+		person.setGender(createPersonRequest.getGender());
+		person.setAddress(createPersonRequest.getAddress());
+		personRepository.save(person);
+	}
+
+	public void deletePersonBySpringData(Long id) {
+		Optional<Person> person = personRepository.findById(id);
+		person.ifPresent(personRepository::delete);
+	}
 }
