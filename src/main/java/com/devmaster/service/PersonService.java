@@ -135,4 +135,14 @@ public class PersonService {
 		Optional<Person> person = personRepository.findById(id);
 		person.ifPresent(personRepository::delete);
 	}
+
+	/**
+	 * Tìm kiếm person theo name
+	 *
+	 * @param name
+	 * @return
+	 */
+	public List<Person> getPersonByName(String name) {
+		return this.personRepository.findByName(name);
+	}
 }

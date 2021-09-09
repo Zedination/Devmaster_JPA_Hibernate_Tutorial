@@ -2,6 +2,8 @@ package com.devmaster.controller;
 
 import java.util.List;
 
+import com.devmaster.repository.PersonRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +20,12 @@ import com.devmaster.service.PersonService;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class DevmasterController {
 
-	@Autowired
 	private PersonService personService;
+
+	private PersonRepository personRepository;
 	
 	@GetMapping("/all-person")
 	public List<Person> getPersons() {
@@ -47,4 +51,6 @@ public class DevmasterController {
 	public void deletePerson(@PathVariable("id") Long id) {
 		personService.deletePerson(id);
 	}
+
+
 }
